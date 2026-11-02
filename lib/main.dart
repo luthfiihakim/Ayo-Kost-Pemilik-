@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'halaman_awal.dart';
+import 'splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,11 +14,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ayo Kost!',
       theme: ThemeData(
-        fontFamily: 'Poppins', // font default seluruh aplikasi
+        fontFamily: 'Poppins',
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0F9D9D)),
         useMaterial3: true,
       ),
-      home: const HalamanAwal(),
+      home: const SplashScreen(),
     );
   }
 }

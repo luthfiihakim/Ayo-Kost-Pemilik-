@@ -7,6 +7,7 @@ import 'informasi_riwayat_booking.dart';
 import 'halaman_ulasan.dart';
 import 'notifikasi.dart';
 import 'chat_list.dart';
+import 'informasi_saldo_page.dart';
 import 'profil.dart';
 
 class Dashboard extends StatefulWidget {
@@ -58,6 +59,13 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ChatListPage()),
+    );
+  }
+
+  void _bukaInformasiSaldo() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const InformasiSaldoPage()),
     );
   }
 
@@ -155,20 +163,24 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ),
                           const SizedBox(width: 12),
-                          Container(
-                            width: 44,
-                            height: 44,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            alignment: Alignment.center,
-                            child: Text(
-                              'H',
-                              style: poppins(
-                                size: 20,
-                                weight: FontWeight.w700,
-                                color: kTealDark,
+                          InkWell(
+                            borderRadius: BorderRadius.circular(22),
+                            onTap: _bukaProfil,
+                            child: Container(
+                              width: 44,
+                              height: 44,
+                              decoration: const BoxDecoration(
+                                color: kTealLight,
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                'H',
+                                style: poppins(
+                                  size: 18,
+                                  weight: FontWeight.w700,
+                                  color: kTeal,
+                                ),
                               ),
                             ),
                           ),
@@ -177,7 +189,103 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                 ),
-                // Grid 4 kartu menu
+
+                // Card info kos
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: kCardShadow,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: kBannerTeal,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              '2 Kost Terdaftar',
+                              style: poppins(
+                                size: 12,
+                                weight: FontWeight.w600,
+                                color: kTealDark,
+                              ),
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: kBadgeTeal,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              'Aktif',
+                              style: poppins(
+                                size: 12,
+                                weight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Kost Meranti',
+                                  style: poppins(
+                                      size: 16, weight: FontWeight.w700),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '10 Kamar • Reulet, Bireuen',
+                                  style: poppins(
+                                    size: 12,
+                                    weight: FontWeight.w400,
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            'Rp 650.000',
+                            style: poppins(
+                              size: 15,
+                              weight: FontWeight.w700,
+                              color: kTeal,
+                            ),
+                          ),
+                          Text(
+                            '/bln',
+                            style: poppins(
+                              size: 11,
+                              weight: FontWeight.w400,
+                              color: Colors.black45,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Grid menu
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -186,9 +294,9 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: _KartuMenu(
-                              icon: Icons.add,
+                              icon: Icons.add_home_work,
                               judul: 'Tambah Kos',
-                              subjudul: 'Daftarkan kost baru',
+                              subjudul: 'Daftarkan kamar baru',
                               onTap: _bukaTambahKos,
                             ),
                           ),
@@ -211,7 +319,7 @@ class _DashboardState extends State<Dashboard> {
                               icon: Icons.account_balance_wallet,
                               judul: 'Informasi Saldo',
                               subjudul: 'Penarikan & informasi\npendapatan',
-                              onTap: () => _segera('Informasi Saldo'),
+                              onTap: _bukaInformasiSaldo,
                             ),
                           ),
                           const SizedBox(width: 16),

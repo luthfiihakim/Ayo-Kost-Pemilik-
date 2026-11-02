@@ -53,7 +53,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   uses-material-design: true
+
+  # Daftarkan aset gambar di sini
   assets:
+    - assets/
     - assets/images/
 
   # To add assets to your application, add an assets section, like this:
