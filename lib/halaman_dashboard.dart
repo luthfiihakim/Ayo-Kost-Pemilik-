@@ -7,6 +7,7 @@ import 'informasi_riwayat_booking.dart';
 import 'halaman_ulasan.dart';
 import 'notifikasi.dart';
 import 'chat_list.dart';
+import 'profil.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -57,6 +58,13 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const ChatListPage()),
+    );
+  }
+
+  void _bukaProfil() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ProfilPage()),
     );
   }
 
@@ -276,8 +284,8 @@ class _DashboardState extends State<Dashboard> {
             _bukaUlasan(); // Ulasan
           } else if (i == 3) {
             _bukaChat(); // Chat
-          } else {
-            _segera('Profil'); // Menu lain yang belum dibuat
+          } else if (i == 4) {
+            _bukaProfil(); // Profil
           }
         },
       ),
