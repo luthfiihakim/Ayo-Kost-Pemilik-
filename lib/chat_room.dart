@@ -9,7 +9,7 @@ import 'call_page.dart';
 
 const _teksTerima = Color(0xFF070000);
 const _teksKirim = Color(0xFFFAF8F8);
-const _waktuTerima = Color(0xFF6CB4F5);
+const _waktuTerima = kGreyText;
 
 /// Jarak geser ke kiri (dalam piksel) agar rekaman terkunci.
 const _ambangKunci = 100.0;
@@ -24,8 +24,9 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   final _teksC = TextEditingController();
+  final _scrollC = ScrollController();
 
-  // Rekaman voice note (simulasi: belum merekam suara sungguhan)
+  // Rekaman voice note (simulasi)
   final Stopwatch _sw = Stopwatch();
   Timer? _timerRekam;
   bool _merekam = false;
@@ -46,6 +47,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void dispose() {
     _timerRekam?.cancel();
     _teksC.dispose();
+    _scrollC.dispose();
     super.dispose();
   }
 
@@ -59,6 +61,24 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       _p.pesan.add(Pesan(teks: teks, dariSaya: true, waktu: waktuSekarang()));
       _teksC.clear();
     });
+    _gulirKeBawah();
+  }
+
+  void _kirimTeksKhusus(String teks) {
+    setState(() {
+      _p.pesan.add(Pesan(teks: teks, dariSaya: true, waktu: waktuSekarang()));
+    });
+    _gulirKeBawah();
+  }
+
+  void _gulirKeBawah() {
+    if (_scrollC.hasClients) {
+      _scrollC.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   // ---------------------------------------------------------------------
@@ -161,6 +181,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         ),
       );
     });
+    _gulirKeBawah();
   }
 
   void _tampilPetunjukMic() {
@@ -173,10 +194,169 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     );
   }
 
-  void _segera(String nama) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$nama belum tersedia')),
+  void _tampilPilihanLampiran() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _itemLampiran(
+                    icon: Icons.insert_drive_file,
+                    label: 'Dokumen',
+                    color: Colors.indigo,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _kirimTeksKhusus('📄 Dokumen terlampir');
+                    },
+                  ),
+                  _itemLampiran(
+                    icon: Icons.camera_alt,
+                    label: 'Kamera',
+                    color: Colors.pink,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _kirimTeksKhusus('📷 Foto dari kamera');
+                    },
+                  ),
+                  _itemLampiran(
+                    icon: Icons.photo,
+                    label: 'Galeri',
+                    color: Colors.purple,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _kirimTeksKhusus('🖼️ Foto dari galeri');
+                    },
+                  ),
+                  _itemLampiran(
+                    icon: Icons.location_on,
+                    label: 'Lokasi',
+                    color: Colors.green,
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _kirimTeksKhusus('📍 Lokasi Kos Saya');
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _itemLampiran({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircleAvatar(
+              radius: 26,
+              backgroundColor: color.withValues(alpha: 0.15),
+              child: Icon(icon, color: color, size: 26),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: poppins(size: 12, weight: FontWeight.w500, color: kTextDark),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _tampilPilihanEmoji() {
+    final emojis = [
+      '😊', '👍', '🙏', '🏠', '🔑', '💰', '📍', '📅',
+      '⭐', '🕒', '👋', '🎉', '✅', '❤️', '🤝', '📋',
+    ];
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Pilih Emoji',
+                style: poppins(size: 14, weight: FontWeight.w600, color: kTealDark),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 12,
+                runSpacing: 10,
+                children: [
+                  for (final e in emojis)
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(ctx);
+                        _teksC.text = '${_teksC.text}$e';
+                        _teksC.selection = TextSelection.fromPosition(
+                          TextPosition(offset: _teksC.text.length),
+                        );
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: kBackground,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(e, style: const TextStyle(fontSize: 24)),
+                      ),
+                    ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -206,7 +386,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             _HeaderRoom(percakapan: _p, onTelepon: _telepon),
             Expanded(
               child: ListView.builder(
+                controller: _scrollC,
                 reverse: true, // pesan terbaru selalu di bawah
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 padding: const EdgeInsets.fromLTRB(11, 16, 11, 12),
                 itemCount: pesan.length,
                 itemBuilder: (context, i) {
@@ -232,13 +415,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   }
 
   /// Satu bar untuk tiga keadaan: mengetik, menahan mic, dan rekaman terkunci.
-  /// Tombol mic diberi key supaya tetap hidup saat tampilan berganti, jadi
-  /// gestur tahan-dan-geser tidak terputus.
   Widget _barInput() {
     final adaTeks = _teksC.text.trim().isNotEmpty;
 
     return Container(
-      height: 44,
+      constraints: const BoxConstraints(minHeight: 44, maxHeight: 120),
       decoration: BoxDecoration(
         color: _merekam ? null : Colors.white,
         gradient: _merekam
@@ -248,6 +429,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         boxShadow: _merekam ? null : kCardShadow,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (_terkunci) ...[
             // Rekaman terkunci: batal di kiri
@@ -265,29 +447,24 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ),
             Expanded(
               child: Center(
-                child: Text(
-                  'Merekam...',
-                  style: poppins(
-                    size: 12,
-                    weight: FontWeight.w600,
-                    color: kTealDark,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'Merekam...',
+                    style: poppins(
+                      size: 12,
+                      weight: FontWeight.w600,
+                      color: kTealDark,
+                    ),
                   ),
                 ),
               ),
             ),
           ] else if (_merekam) ...[
             // Sedang menahan mic (belum terkunci)
-            const SizedBox(width: 7),
-            Container(
-              width: 30,
-              height: 30,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.mic, color: kTeal, size: 20),
-            ),
             const SizedBox(width: 10),
+            const Icon(Icons.fiber_manual_record, color: Colors.red, size: 12),
+            const SizedBox(width: 6),
             Text(
               formatDurasi(_detikRekam),
               style: poppins(
@@ -298,10 +475,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ),
             Expanded(child: Center(child: _petunjukGeser())),
           ] else ...[
-            _ikon(Icons.add_reaction_outlined, () => _segera('Emoji')),
+            _ikon(Icons.add_reaction_outlined, _tampilPilihanEmoji),
             Expanded(
               child: TextField(
                 controller: _teksC,
+                minLines: 1,
+                maxLines: 4,
                 textInputAction: TextInputAction.send,
                 onSubmitted: (_) => _kirimTeks(),
                 style: poppins(size: 15, weight: FontWeight.w400),
@@ -314,11 +493,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                   ),
                   border: InputBorder.none,
                   isDense: true,
-                  contentPadding: EdgeInsets.zero,
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                 ),
               ),
             ),
-            _ikon(Icons.add_circle_outline, () => _segera('Lampiran')),
+            _ikon(Icons.add_circle_outline, _tampilPilihanLampiran),
           ],
           if (_terkunci)
             // Rekaman terkunci: kirim di kanan
@@ -345,7 +525,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     );
   }
 
-  Widget _ikon(IconData icon, VoidCallback onTap, {Color warna = Colors.black87}) {
+  Widget _ikon(IconData icon, VoidCallback onTap,
+      {Color warna = Colors.black87}) {
     return IconButton(
       onPressed: onTap,
       padding: EdgeInsets.zero,
@@ -387,26 +568,29 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   Widget _petunjukGeser() {
     final opasitas =
         (1 - _geser.abs() / _ambangKunci).clamp(0.0, 1.0).toDouble();
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.lock_outline, size: 16, color: kTealDark),
-        const SizedBox(width: 4),
-        Opacity(
-          opacity: opasitas,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (var i = 0; i < 7; i++)
-                Icon(
-                  Icons.chevron_left,
-                  size: 18,
-                  color: kTealDark.withAlpha(255 - i * 25),
-                ),
-            ],
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.lock_outline, size: 16, color: kTealDark),
+          const SizedBox(width: 4),
+          Opacity(
+            opacity: opasitas,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (var i = 0; i < 4; i++)
+                  Icon(
+                    Icons.chevron_left,
+                    size: 16,
+                    color: kTealDark.withValues(alpha: (255 - i * 40) / 255),
+                  ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -435,8 +619,10 @@ class _HeaderRoom extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
+              tooltip: 'Kembali',
               onPressed: () => Navigator.maybePop(context),
-              icon: const Icon(Icons.chevron_left, color: Colors.white, size: 32),
+              icon:
+                  const Icon(Icons.chevron_left, color: Colors.white, size: 32),
             ),
             Container(
               width: 44,
@@ -449,7 +635,8 @@ class _HeaderRoom extends StatelessWidget {
               ),
               child: Text(
                 percakapan.inisial,
-                style: poppins(size: 17, weight: FontWeight.w700, color: kTeal),
+                style: poppins(
+                    size: 17, weight: FontWeight.w700, color: kTealDark),
               ),
             ),
             const SizedBox(width: 12),
@@ -480,8 +667,10 @@ class _HeaderRoom extends StatelessWidget {
               ),
             ),
             IconButton(
+              tooltip: 'Telepon',
               onPressed: onTelepon,
-              icon: const Icon(Icons.phone_outlined, color: Colors.white, size: 26),
+              icon: const Icon(Icons.phone_outlined,
+                  color: Colors.white, size: 26),
             ),
             const SizedBox(width: 8),
           ],
@@ -515,16 +704,16 @@ class _Bubble extends StatelessWidget {
           decoration: BoxDecoration(
             color: saya ? kTeal : Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(saya ? 16 : 0),
+              topLeft: const Radius.circular(16),
               topRight: const Radius.circular(16),
-              bottomLeft: const Radius.circular(16),
-              bottomRight: Radius.circular(saya ? 0 : 16),
+              bottomLeft: Radius.circular(saya ? 16 : 4),
+              bottomRight: Radius.circular(saya ? 4 : 16),
             ),
             boxShadow: kCardShadow,
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (pesan.voiceNote)
                 _VoiceBubble(pesan: pesan)
@@ -537,13 +726,29 @@ class _Bubble extends StatelessWidget {
                     color: saya ? _teksKirim : _teksTerima,
                   ),
                 ),
-              const SizedBox(height: 2),
-              Text(
-                keterangan,
-                style: poppins(
-                  size: 9,
-                  weight: FontWeight.w400,
-                  color: saya ? const Color(0xCCFFFFFF) : _waktuTerima,
+              const SizedBox(height: 3),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      keterangan,
+                      style: poppins(
+                        size: 9,
+                        weight: FontWeight.w400,
+                        color: saya ? const Color(0xCCFFFFFF) : _waktuTerima,
+                      ),
+                    ),
+                    if (saya) ...[
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.done_all,
+                        size: 13,
+                        color: Color(0xCCFFFFFF),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
@@ -556,7 +761,7 @@ class _Bubble extends StatelessWidget {
 
 // ---------------------------------------------------------------------------
 // Voice note: tombol play/pause + gelombang. Bagian yang sudah "diputar"
-// berwarna gelap (animasi saja, belum ada suara).
+// berwarna gelap.
 // ---------------------------------------------------------------------------
 class _VoiceBubble extends StatefulWidget {
   final Pesan pesan;
@@ -578,8 +783,19 @@ class _VoiceBubbleState extends State<_VoiceBubble>
       duration: Duration(seconds: max(1, widget.pesan.durasiVoice ?? 1)),
     );
     _ctrl.addStatusListener((s) {
-      if (s == AnimationStatus.completed) _ctrl.reset();
+      if (s == AnimationStatus.completed) {
+        _ctrl.reset();
+        if (mounted) setState(() {});
+      }
     });
+  }
+
+  @override
+  void didUpdateWidget(covariant _VoiceBubble oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pesan.durasiVoice != widget.pesan.durasiVoice) {
+      _ctrl.duration = Duration(seconds: max(1, widget.pesan.durasiVoice ?? 1));
+    }
   }
 
   @override
@@ -642,20 +858,27 @@ class _VoiceBubbleState extends State<_VoiceBubble>
               ),
             ),
             const SizedBox(width: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                for (var i = 0; i < batang.length; i++)
-                  Container(
-                    width: 3,
-                    height: 6 + batang[i] * 20,
-                    margin: const EdgeInsets.symmetric(horizontal: 1),
-                    decoration: BoxDecoration(
-                      color: i < aktif ? sudahDiputar : belumDiputar,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-              ],
+            Flexible(
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for (var i = 0; i < batang.length; i++)
+                      Container(
+                        width: 3,
+                        height: 6 + batang[i] * 20,
+                        margin: const EdgeInsets.symmetric(horizontal: 1),
+                        decoration: BoxDecoration(
+                          color: i < aktif ? sudahDiputar : belumDiputar,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           ],
         );
