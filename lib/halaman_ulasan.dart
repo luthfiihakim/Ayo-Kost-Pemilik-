@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // 1. Halaman Utama Ulasan (Tampilan Ulasan Kost)
 class HalamanUlasan extends StatelessWidget {
-  const HalamanUlasan({Key? key}) : super(key: key);
+  const HalamanUlasan({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +311,7 @@ class HalamanUlasan extends StatelessWidget {
 
 // 2. Halaman Ketik & Kirim Balasan Ulasan
 class HalamanBalasUlasan extends StatefulWidget {
-  const HalamanBalasUlasan({Key? key}) : super(key: key);
+  const HalamanBalasUlasan({super.key});
 
   @override
   State<HalamanBalasUlasan> createState() => _HalamanBalasUlasanState();

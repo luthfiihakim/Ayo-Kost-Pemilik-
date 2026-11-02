@@ -76,13 +76,6 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void _segera(String nama) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Halaman $nama belum dibuat')),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final top = MediaQuery.of(context).padding.top;

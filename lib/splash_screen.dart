@@ -13,12 +13,12 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   // Urutan frame transisi lengkungan ombak sesuai Figma
   final List<String> _frames = const [
-    'assets/images/Splash Screen.svg',
-    'assets/images/Splash Screen 1.svg',
-    'assets/images/Splash Screen 2.svg',
-    'assets/images/Splash Screen 3.svg',
-    'assets/images/Splash Screen 4.svg',
-    'assets/images/Splash Screen 5.svg',
+    'assets/Splash Screen.svg',
+    'assets/Splash Screen 1.svg',
+    'assets/Splash Screen 2.svg',
+    'assets/Splash Screen 3.svg',
+    'assets/Splash Screen 4.svg',
+    'assets/Splash Screen 5.svg',
   ];
 
   int _currentFrame = 0;
@@ -113,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   duration: const Duration(milliseconds: 400),
                   curve: Curves.easeOutBack,
                   child: Image.asset(
-                    'assets/images/logo.png',
+                    'assets/logo.png',
                     width: 220,
                     fit: BoxFit.contain,
                     errorBuilder: (context, error, stackTrace) {

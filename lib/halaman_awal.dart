@@ -14,7 +14,7 @@ class HalamanAwal extends StatelessWidget {
           // 1. Rectangle 20: Gambar latar belakang penuh dari Figma (Halaman Awal.png)
           Positioned.fill(
             child: Image.asset(
-              'assets/images/Halaman Awal.png',
+              'assets/Halaman Awal.png',
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return Container(
@@ -34,7 +34,7 @@ class HalamanAwal extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(top: 40),
                 child: Image.asset(
-                  'assets/images/logo.png',
+                  'assets/logo.png',
                   width: 175,
                   fit: BoxFit.contain,
                   errorBuilder: (context, error, stackTrace) {

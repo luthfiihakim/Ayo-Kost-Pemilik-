@@ -42,7 +42,7 @@ class _ChatListPageState extends State<ChatListPage> {
                 : ListView.separated(
                     padding: const EdgeInsets.only(top: 12, bottom: 12),
                     itemCount: data.length,
-                    separatorBuilder: (_, __) => const Divider(
+                    separatorBuilder: (_, _) => const Divider(
                       height: 1,
                       indent: 23,
                       endIndent: 23,
