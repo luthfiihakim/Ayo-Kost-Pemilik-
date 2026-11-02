@@ -4,6 +4,7 @@ import 'data_penyewa.dart';
 import 'kos_saya.dart';
 import 'halaman_tambah_kos.dart';
 import 'informasi_riwayat_booking.dart';
+import 'halaman_ulasan.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -13,7 +14,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _selectedIndex = 2; // Beranda aktif secara default
+  final int _selectedIndex = 2; // Beranda aktif secara default
 
   void _bukaTambahKos() {
     Navigator.push(
@@ -40,6 +41,13 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const InformasiRiwayatBookingPage()),
+    );
+  }
+
+  void _bukaUlasan() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HalamanUlasan()),
     );
   }
 
@@ -250,7 +258,9 @@ class _DashboardState extends State<Dashboard> {
         onTap: (i) {
           if (i == 2) return; // Jika sedang di Beranda (index 2)
           if (i == 0) {
-            _bukaBooking(); // Membuka halaman informasi riwayat booking
+            _bukaBooking(); // Membuka halaman Informasi Riwayat Booking
+          } else if (i == 1) {
+            _bukaUlasan(); // Membuka halaman Ulasan
           } else {
             _segera('ini'); // Untuk menu lain yang belum dibuat
           }
