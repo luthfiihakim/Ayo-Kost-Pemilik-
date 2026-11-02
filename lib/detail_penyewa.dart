@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'data_penyewa.dart';
+import 'chat_model.dart';
+import 'chat_room.dart';
 
 const _teal = Color(0xFF0F9D9D);
 const _tealDark = Color(0xFF156D6D);
@@ -30,9 +32,13 @@ class DetailPenyewaPage extends StatelessWidget {
   const DetailPenyewaPage({super.key, required this.penyewa});
 
   void _chatPenyewa(BuildContext context) {
-    // TODO: ganti dengan navigasi ke halaman Chat jika sudah dibuat
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Chat dengan ${penyewa.nama}')),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChatRoomPage(
+          percakapan: cariAtauBuatPercakapan(penyewa.nama),
+        ),
+      ),
     );
   }
 

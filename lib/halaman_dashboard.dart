@@ -5,6 +5,8 @@ import 'kos_saya.dart';
 import 'halaman_tambah_kos.dart';
 import 'informasi_riwayat_booking.dart';
 import 'halaman_ulasan.dart';
+import 'notifikasi.dart';
+import 'chat_list.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -48,6 +50,13 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const HalamanUlasan()),
+    );
+  }
+
+  void _bukaChat() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ChatListPage()),
     );
   }
 
@@ -104,7 +113,11 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           InkWell(
                             borderRadius: BorderRadius.circular(14),
-                            onTap: () => _segera('Notifikasi'),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const NotifikasiPage()),
+                            ),
                             child: Container(
                               width: 44,
                               height: 44,
@@ -256,13 +269,15 @@ class _DashboardState extends State<Dashboard> {
       bottomNavigationBar: AppBottomNav(
         index: _selectedIndex,
         onTap: (i) {
-          if (i == 2) return; // Jika sedang di Beranda (index 2)
+          if (i == 2) return; // Sedang di Beranda
           if (i == 0) {
-            _bukaBooking(); // Membuka halaman Informasi Riwayat Booking
+            _bukaBooking(); // Informasi Riwayat Booking
           } else if (i == 1) {
-            _bukaUlasan(); // Membuka halaman Ulasan
+            _bukaUlasan(); // Ulasan
+          } else if (i == 3) {
+            _bukaChat(); // Chat
           } else {
-            _segera('ini'); // Untuk menu lain yang belum dibuat
+            _segera('Profil'); // Menu lain yang belum dibuat
           }
         },
       ),
