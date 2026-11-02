@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'app_style.dart';
 import 'data_penyewa.dart';
 import 'kos_saya.dart';
+import 'halaman_tambah_kos.dart';
+import 'informasi_riwayat_booking.dart';
+import 'halaman_ulasan.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -10,9 +14,15 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  int _selectedIndex = 2; // Beranda aktif secara default
+  final int _selectedIndex = 2; // Beranda aktif secara default
 
-  // Navigasi ke halaman Data Penyewa
+  void _bukaTambahKos() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HalamanTambahKos()),
+    );
+  }
+
   void _bukaDataPenyewa() {
     Navigator.push(
       context,
@@ -20,47 +30,82 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  void _bukaKosSaya() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const KosSayaPage()),
+    );
+  }
+
+  void _bukaBooking() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const InformasiRiwayatBookingPage()),
+    );
+  }
+
+  void _bukaUlasan() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HalamanUlasan()),
+    );
+  }
+
+  void _segera(String nama) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Halaman $nama belum dibuat')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final top = MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFE6F8F8),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Stack(
-            children: [
-              // Header Teal dengan sudut melengkung di bawah
-              Container(
-                height: 180,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF0F9D9D),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(28),
-                    bottomRight: Radius.circular(28),
-                  ),
+      backgroundColor: kBackground,
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            // Header teal sampai ke status bar
+            Container(
+              height: top + 180,
+              decoration: const BoxDecoration(
+                color: kTeal,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(28),
+                  bottomRight: Radius.circular(28),
                 ),
+                boxShadow: kCardShadow,
               ),
-              // Konten Utama
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Baris Sapaan & Tombol Notifikasi / Avatar
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Sapaan, notifikasi, avatar
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, top + 20, 20, 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
                           'Halo, Hakim! 👋',
-                          style: TextStyle(
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: poppins(
+                            size: 22,
+                            weight: FontWeight.w700,
                             color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Row(
-                          children: [
-                            // Tombol Notifikasi
-                            Container(
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                            borderRadius: BorderRadius.circular(14),
+                            onTap: () => _segera('Notifikasi'),
+                            child: Container(
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
@@ -70,11 +115,8 @@ class _DashboardState extends State<Dashboard> {
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  const Icon(
-                                    Icons.notifications_none,
-                                    color: Colors.white,
-                                    size: 26,
-                                  ),
+                                  const Icon(Icons.notifications_none,
+                                      color: Colors.white, size: 26),
                                   Positioned(
                                     right: 9,
                                     top: 8,
@@ -90,207 +132,165 @@ class _DashboardState extends State<Dashboard> {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            // Avatar Profil
-                            Container(
-                              width: 44,
-                              height: 44,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                'H',
-                                style: TextStyle(
-                                  color: Color(0xFF166E6E),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                          ),
+                          const SizedBox(width: 12),
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'H',
+                              style: poppins(
+                                size: 20,
+                                weight: FontWeight.w700,
+                                color: kTealDark,
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Grid 4 Kartu Menu Utama
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildMenuCard(
-                                icon: Icons.add,
-                                title: 'Tambah Kos',
-                                subtitle: 'Daftarkan kost baru',
-                                onTap: () {
-                                  // TODO: navigasi ke halaman Tambah Kos
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildMenuCard(
-                                icon: Icons.people_alt,
-                                title: 'Data Penyewa',
-                                subtitle: '17 penyewa aktif',
-                                onTap: _bukaDataPenyewa,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildMenuCard(
-                                icon: Icons.account_balance_wallet,
-                                title: 'Informasi Saldo',
-                                subtitle: 'Penarikan & informasi\npendapatan',
-                                onTap: () {
-                                  // TODO: navigasi ke halaman Informasi Saldo
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: _buildMenuCard(
-                                icon: Icons.home,
-                                title: 'Kos Saya',
-                                subtitle: 'Lihat & atur kamar kost',
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const KosSayaPage(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  // Judul Bagian Penyewa Terbaru
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      'Penyewa Terbaru',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF1E1E1E),
+                          ),
+                        ],
                       ),
-                    ),
+                    ],
                   ),
-                  const SizedBox(height: 12),
-                  // Kartu Daftar Penyewa
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x0F000000),
-                          blurRadius: 15,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        _buildTenantItem(
-                          name: 'Lidya',
-                          room: 'Kamar 3 • Kost Mahogani',
-                          date: '29 Sep – 28 Okt 2026',
-                          initial: 'L',
-                        ),
-                        const SizedBox(height: 20),
-                        _buildTenantItem(
-                          name: 'Naila',
-                          room: 'Kamar 7 • Kost Meranti',
-                          date: '27 Sep – 26 Okt 2026',
-                          initial: 'N',
-                        ),
-                        const SizedBox(height: 20),
-                        _buildTenantItem(
-                          name: 'Ashwa',
-                          room: 'Kamar 5 • Kost Meranti',
-                          date: '26 Sep – 25 Okt 2026',
-                          initial: 'A',
-                        ),
-                      ],
-                    ),
+                ),
+                // Grid 4 kartu menu
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _KartuMenu(
+                              icon: Icons.add,
+                              judul: 'Tambah Kos',
+                              subjudul: 'Daftarkan kost baru',
+                              onTap: _bukaTambahKos,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _KartuMenu(
+                              icon: Icons.people_alt,
+                              judul: 'Data Penyewa',
+                              subjudul: '17 penyewa aktif',
+                              onTap: _bukaDataPenyewa,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _KartuMenu(
+                              icon: Icons.account_balance_wallet,
+                              judul: 'Informasi Saldo',
+                              subjudul: 'Penarikan & informasi\npendapatan',
+                              onTap: () => _segera('Informasi Saldo'),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _KartuMenu(
+                              icon: Icons.home,
+                              judul: 'Kos Saya',
+                              subjudul: 'Lihat & atur kamar kost',
+                              onTap: _bukaKosSaya,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 24),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-      // Bottom Navigation Bar
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0x0A000000),
-              blurRadius: 10,
-              offset: Offset(0, -4),
+                ),
+                const SizedBox(height: 24),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Penyewa Terbaru',
+                    style: poppins(size: 16, weight: FontWeight.w700),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: kCardShadow,
+                  ),
+                  child: const Column(
+                    children: [
+                      _BarisPenyewa(
+                        nama: 'Lidya',
+                        kamar: 'Kamar 3 • Kost Mahogani',
+                        tanggal: '29 Sep – 28 Okt 2026',
+                      ),
+                      SizedBox(height: 20),
+                      _BarisPenyewa(
+                        nama: 'Naila',
+                        kamar: 'Kamar 7 • Kost Meranti',
+                        tanggal: '27 Sep – 26 Okt 2026',
+                      ),
+                      SizedBox(height: 20),
+                      _BarisPenyewa(
+                        nama: 'Ashwa',
+                        kamar: 'Kamar 5 • Kost Meranti',
+                        tanggal: '26 Sep – 25 Okt 2026',
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
           ],
         ),
-        child: SafeArea(
-          top: false,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, Icons.receipt_long_outlined, 'Booking'),
-              _buildNavItem(1, Icons.star_outline_rounded, 'Ulasan'),
-              _buildNavItem(2, Icons.home_outlined, 'Beranda'),
-              _buildNavItem(3, Icons.chat_bubble_outline_rounded, 'Chat'),
-              _buildNavItem(4, Icons.person_outline_rounded, 'Profil'),
-            ],
-          ),
-        ),
+      ),
+      bottomNavigationBar: AppBottomNav(
+        index: _selectedIndex,
+        onTap: (i) {
+          if (i == 2) return; // Jika sedang di Beranda (index 2)
+          if (i == 0) {
+            _bukaBooking(); // Membuka halaman Informasi Riwayat Booking
+          } else if (i == 1) {
+            _bukaUlasan(); // Membuka halaman Ulasan
+          } else {
+            _segera('ini'); // Untuk menu lain yang belum dibuat
+          }
+        },
       ),
     );
   }
+}
 
-  // Widget Kartu Menu (sekarang bisa diklik lewat onTap)
-  Widget _buildMenuCard({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
+class _KartuMenu extends StatelessWidget {
+  final IconData icon;
+  final String judul;
+  final String subjudul;
+  final VoidCallback onTap;
+
+  const _KartuMenu({
+    required this.icon,
+    required this.judul,
+    required this.subjudul,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 138,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x0F000000),
-            blurRadius: 15,
-            offset: Offset(0, 6),
-          ),
-        ],
+        boxShadow: kCardShadow,
       ),
       child: Material(
         color: Colors.transparent,
@@ -307,30 +307,28 @@ class _DashboardState extends State<Dashboard> {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0F9D9D),
+                    color: kTeal,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(icon, color: Colors.white, size: 24),
                 ),
                 const Spacer(),
                 Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Color(0xFF1E1E1E),
-                  ),
+                  judul,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: poppins(size: 14, weight: FontWeight.w700),
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  subtitle,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Colors.black45,
-                    height: 1.2,
-                  ),
+                  subjudul,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
+                  style: poppins(
+                    size: 11,
+                    weight: FontWeight.w400,
+                    color: Colors.black45,
+                  ).copyWith(height: 1.2),
                 ),
               ],
             ),
@@ -339,14 +337,21 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
 
-  // Widget Item Penyewa
-  Widget _buildTenantItem({
-    required String name,
-    required String room,
-    required String date,
-    required String initial,
-  }) {
+class _BarisPenyewa extends StatelessWidget {
+  final String nama;
+  final String kamar;
+  final String tanggal;
+
+  const _BarisPenyewa({
+    required this.nama,
+    required this.kamar,
+    required this.tanggal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         Container(
@@ -358,12 +363,8 @@ class _DashboardState extends State<Dashboard> {
           ),
           alignment: Alignment.center,
           child: Text(
-            initial,
-            style: const TextStyle(
-              color: Color(0xFF166E6E),
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            nama[0].toUpperCase(),
+            style: poppins(size: 18, weight: FontWeight.w700, color: kTealDark),
           ),
         ),
         const SizedBox(width: 14),
@@ -372,89 +373,24 @@ class _DashboardState extends State<Dashboard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: Color(0xFF1E1E1E),
-                ),
+                nama,
+                style: poppins(size: 14, weight: FontWeight.w700),
               ),
               const SizedBox(height: 4),
               Text(
-                room,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Colors.black45,
-                ),
+                kamar,
+                style: poppins(
+                    size: 11, weight: FontWeight.w400, color: Colors.black45),
               ),
             ],
           ),
         ),
         Text(
-          date,
-          style: const TextStyle(
-            fontSize: 11,
-            color: Colors.black54,
-            fontWeight: FontWeight.w500,
-          ),
+          tanggal,
+          style: poppins(
+              size: 11, weight: FontWeight.w500, color: Colors.black54),
         ),
       ],
-    );
-  }
-
-  // Widget Item Navigasi Bawah
-  Widget _buildNavItem(int index, IconData icon, String label) {
-    final bool isSelected = _selectedIndex == index;
-
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      borderRadius: BorderRadius.circular(20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (isSelected)
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFDFF5F5),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFF0F9D9D),
-                  size: 24,
-                ),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFF757575),
-                  size: 24,
-                ),
-              ),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                color: isSelected
-                    ? const Color(0xFF0F9D9D)
-                    : const Color(0xFF757575),
-                fontSize: 11,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
