@@ -254,7 +254,7 @@ class AppBottomNav extends StatelessWidget {
   const AppBottomNav({super.key, this.index, required this.onTap});
 
   static const _items = [
-    _NavItem(Icons.event_note_outlined, 'Booking'),
+    _NavItem(Icons.receipt_long_outlined, 'Booking'),
     _NavItem(Icons.star_border, 'Ulasan'),
     _NavItem(Icons.home_outlined, 'Beranda'),
     _NavItem(Icons.chat_bubble_outline, 'Chat'),
@@ -307,7 +307,7 @@ class AppBottomNav extends StatelessWidget {
                           style: poppins(
                             size: 12,
                             weight: FontWeight.w600,
-                            color: i == index ? kTeal : kGreyNav,
+                            color: i == index ? const Color(0xFF374151) : kGreyNav,
                           ),
                         ),
                       ],

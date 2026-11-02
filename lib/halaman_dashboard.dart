@@ -85,9 +85,9 @@ class _DashboardState extends State<Dashboard> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            // Header teal sampai ke status bar
+            // Header teal sampai ke status bar dan melengkung di belakang kartu atas
             Container(
-              height: top + 180,
+              height: top + 155,
               decoration: const BoxDecoration(
                 color: kTeal,
                 borderRadius: BorderRadius.only(
@@ -102,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
               children: [
                 // Sapaan, notifikasi, avatar
                 Padding(
-                  padding: EdgeInsets.fromLTRB(20, top + 20, 20, 20),
+                  padding: EdgeInsets.fromLTRB(20, top + 16, 20, 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -133,6 +133,13 @@ class _DashboardState extends State<Dashboard> {
                               decoration: BoxDecoration(
                                 color: const Color(0xFF34BABA),
                                 borderRadius: BorderRadius.circular(14),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x20000000),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               child: Stack(
                                 alignment: Alignment.center,
@@ -163,16 +170,23 @@ class _DashboardState extends State<Dashboard> {
                               width: 44,
                               height: 44,
                               decoration: const BoxDecoration(
-                                color: kTealLight,
+                                color: Colors.white,
                                 shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0x1F000000),
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
                               ),
                               alignment: Alignment.center,
                               child: Text(
                                 'H',
                                 style: poppins(
-                                  size: 18,
+                                  size: 19,
                                   weight: FontWeight.w700,
-                                  color: kTeal,
+                                  color: kTealDark,
                                 ),
                               ),
                             ),
@@ -183,102 +197,7 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
 
-                // Card info kos
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: kCardShadow,
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: kBannerTeal,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              '2 Kost Terdaftar',
-                              style: poppins(
-                                size: 12,
-                                weight: FontWeight.w600,
-                                color: kTealDark,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: kBadgeTeal,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              'Aktif',
-                              style: poppins(
-                                size: 12,
-                                weight: FontWeight.w600,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Kost Meranti',
-                                  style: poppins(
-                                      size: 16, weight: FontWeight.w700),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  '10 Kamar • Reulet, Bireuen',
-                                  style: poppins(
-                                    size: 12,
-                                    weight: FontWeight.w400,
-                                    color: Colors.black45,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            'Rp 650.000',
-                            style: poppins(
-                              size: 15,
-                              weight: FontWeight.w700,
-                              color: kTeal,
-                            ),
-                          ),
-                          Text(
-                            '/bln',
-                            style: poppins(
-                              size: 11,
-                              weight: FontWeight.w400,
-                              color: Colors.black45,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-
-                // Grid menu
+                // Grid menu 4 kartu (2x2)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
@@ -287,9 +206,9 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           Expanded(
                             child: _KartuMenu(
-                              icon: Icons.add_home_work,
+                              icon: Icons.add,
                               judul: 'Tambah Kos',
-                              subjudul: 'Daftarkan kamar baru',
+                              subjudul: 'Daftarkan kost baru',
                               onTap: _bukaTambahKos,
                             ),
                           ),
@@ -311,14 +230,14 @@ class _DashboardState extends State<Dashboard> {
                             child: _KartuMenu(
                               icon: Icons.account_balance_wallet,
                               judul: 'Informasi Saldo',
-                              subjudul: 'Penarikan & informasi\npendapatan',
+                              subjudul: 'Penarikan & Informasi\npendapatan',
                               onTap: _bukaInformasiSaldo,
                             ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
                             child: _KartuMenu(
-                              icon: Icons.home,
+                              icon: Icons.home_rounded,
                               judul: 'Kos Saya',
                               subjudul: 'Lihat & atur kamar kost',
                               onTap: _bukaKosSaya,
@@ -329,7 +248,10 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                 ),
+
                 const SizedBox(height: 24),
+
+                // Section Penyewa Terbaru
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
@@ -341,7 +263,7 @@ class _DashboardState extends State<Dashboard> {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(24),
@@ -487,7 +409,7 @@ class _BarisPenyewa extends StatelessWidget {
           ),
           alignment: Alignment.center,
           child: Text(
-            nama[0].toUpperCase(),
+            nama.isNotEmpty ? nama[0].toUpperCase() : '',
             style: poppins(size: 18, weight: FontWeight.w700, color: kTealDark),
           ),
         ),

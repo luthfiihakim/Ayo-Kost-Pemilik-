@@ -15,11 +15,79 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
+  // Variabel untuk menampilkan pesan error di bawah kolom
+  String? _emailError;
+  String? _passwordError;
+
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _masuk() {
+    FocusScope.of(context).unfocus();
+
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    // Set error text di bawah kolom masing-masing
+    setState(() {
+      _emailError = email.isEmpty ? 'Email wajib diisi' : null;
+      _passwordError = password.isEmpty ? 'Password wajib diisi' : null;
+    });
+
+    // Validasi 1: Jika kedua kolom kosong
+    if (email.isEmpty && password.isEmpty) {
+      _tampilkanSnackBar('Harap isi akun/email dan password terlebih dahulu!');
+      return;
+    }
+
+    // Validasi 2: Jika email kosong
+    if (email.isEmpty) {
+      _tampilkanSnackBar('Harap isi email terlebih dahulu!');
+      return;
+    }
+
+    // Validasi 3: Jika password kosong
+    if (password.isEmpty) {
+      _tampilkanSnackBar('Harap isi password terlebih dahulu!');
+      return;
+    }
+
+    // Jika semua kolom telah terisi, proses login berhasil dan navigasi ke Dashboard
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const Dashboard()),
+    );
+  }
+
+  void _tampilkanSnackBar(String pesan) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            const Icon(Icons.warning_amber_rounded, color: Colors.white),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                pesan,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.redAccent,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -80,9 +148,17 @@ class _LoginState extends State<Login> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
+                      onChanged: (val) {
+                        if (_emailError != null) {
+                          setState(() {
+                            _emailError = null;
+                          });
+                        }
+                      },
                       onTapOutside: (_) => FocusScope.of(context).unfocus(),
                       decoration: InputDecoration(
                         hintText: 'Masukkan Email',
+                        errorText: _emailError,
                         filled: true,
                         fillColor: const Color(0xFFFBFBFB),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -93,6 +169,14 @@ class _LoginState extends State<Login> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: const BorderSide(color: Color(0xFF0F9D9D)),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.redAccent),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
                         ),
                       ),
                     ),
@@ -107,10 +191,18 @@ class _LoginState extends State<Login> {
                       obscureText: _obscurePassword,
                       keyboardType: TextInputType.visiblePassword,
                       textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => FocusScope.of(context).unfocus(),
+                      onChanged: (val) {
+                        if (_passwordError != null) {
+                          setState(() {
+                            _passwordError = null;
+                          });
+                        }
+                      },
+                      onSubmitted: (_) => _masuk(),
                       onTapOutside: (_) => FocusScope.of(context).unfocus(),
                       decoration: InputDecoration(
                         hintText: 'Masukkan Password',
+                        errorText: _passwordError,
                         filled: true,
                         fillColor: const Color(0xFFFBFBFB),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -132,6 +224,14 @@ class _LoginState extends State<Login> {
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
                           borderSide: const BorderSide(color: Color(0xFF0F9D9D)),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.redAccent),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
                         ),
                       ),
                     ),
@@ -156,13 +256,7 @@ class _LoginState extends State<Login> {
                       width: double.infinity,
                       height: 48,
                       child: ElevatedButton(
-                        onPressed: () {
-                          FocusScope.of(context).unfocus();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Dashboard()),
-                          );
-                        },
+                        onPressed: _masuk,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0F9D9D),
                           shape: RoundedRectangleBorder(
