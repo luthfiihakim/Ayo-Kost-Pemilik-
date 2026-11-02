@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'app_style.dart';
 import 'data_penyewa.dart';
 import 'kos_saya.dart';
+import 'halaman_tambah_kos.dart';
+import 'informasi_riwayat_booking.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -12,6 +14,13 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 2; // Beranda aktif secara default
+
+  void _bukaTambahKos() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const HalamanTambahKos()),
+    );
+  }
 
   void _bukaDataPenyewa() {
     Navigator.push(
@@ -24,6 +33,13 @@ class _DashboardState extends State<Dashboard> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const KosSayaPage()),
+    );
+  }
+
+  void _bukaBooking() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const InformasiRiwayatBookingPage()),
     );
   }
 
@@ -144,7 +160,7 @@ class _DashboardState extends State<Dashboard> {
                               icon: Icons.add,
                               judul: 'Tambah Kos',
                               subjudul: 'Daftarkan kost baru',
-                              onTap: () => _segera('Tambah Kos'),
+                              onTap: _bukaTambahKos,
                             ),
                           ),
                           const SizedBox(width: 16),
@@ -232,8 +248,12 @@ class _DashboardState extends State<Dashboard> {
       bottomNavigationBar: AppBottomNav(
         index: _selectedIndex,
         onTap: (i) {
-          if (i == 2) return;
-          _segera('ini'); // TODO: Booking, Ulasan, Chat, Profil
+          if (i == 2) return; // Jika sedang di Beranda (index 2)
+          if (i == 0) {
+            _bukaBooking(); // Membuka halaman informasi riwayat booking
+          } else {
+            _segera('ini'); // Untuk menu lain yang belum dibuat
+          }
         },
       ),
     );
