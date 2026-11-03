@@ -7,8 +7,9 @@ import 'informasi_riwayat_booking.dart';
 import 'halaman_ulasan.dart';
 import 'notifikasi.dart';
 import 'chat_list.dart';
-import 'informasi_saldo_page.dart';
 import 'profil.dart';
+import 'informasi_saldo_page.dart';
+import 'saldo_model.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -62,10 +63,13 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  void _bukaInformasiSaldo() {
+   void _bukaInformasiSaldo() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const InformasiSaldoPage()),
+      MaterialPageRoute(
+        settings: const RouteSettings(name: kRouteSaldo),
+        builder: (_) => const InformasiSaldoPage(),
+      ),
     );
   }
 

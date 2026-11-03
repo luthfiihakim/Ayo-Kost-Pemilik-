@@ -5,9 +5,11 @@ import 'chat_list.dart';
 import 'edit_profil.dart';
 import 'halaman_ulasan.dart';
 import 'informasi_riwayat_booking.dart';
+import 'informasi_saldo_page.dart';
 import 'login.dart';
 import 'pengaturan_notifikasi.dart';
 import 'profil_model.dart';
+import 'saldo_model.dart' show kRouteSaldo;
 import 'ubah_kata_sandi.dart';
 
 const _merah = Color(0xFFEB221E);
@@ -23,15 +25,18 @@ class ProfilPage extends StatefulWidget {
 class _ProfilPageState extends State<ProfilPage> {
   ProfilData _data = ProfilData.contoh;
 
-  void _segera(String nama) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Halaman $nama belum dibuat')),
-    );
-  }
-
   void _buka(Widget halaman) {
     Navigator.push(context, MaterialPageRoute(builder: (_) => halaman));
+  }
+
+  void _bukaRiwayatPenarikan() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        settings: const RouteSettings(name: kRouteSaldo),
+        builder: (_) => const InformasiSaldoPage(tabAwal: 1),
+      ),
+    );
   }
 
   Future<void> _editProfil() async {
@@ -107,7 +112,7 @@ class _ProfilPageState extends State<ProfilPage> {
                 _BarisMenu(
                   icon: Icons.account_balance_wallet_outlined,
                   label: 'Riwayat Penarikan',
-                  onTap: () => _segera('Riwayat Penarikan'),
+                  onTap: _bukaRiwayatPenarikan,
                 ),
                 _BarisMenu(
                   icon: Icons.star_border,
