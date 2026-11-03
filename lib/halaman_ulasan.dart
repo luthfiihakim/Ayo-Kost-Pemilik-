@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'app_style.dart';
+import 'navigasi_utama.dart';
 
 // 1. Halaman Utama Ulasan (Tampilan Ulasan Kost)
 class HalamanUlasan extends StatelessWidget {
@@ -107,6 +109,10 @@ class HalamanUlasan extends StatelessWidget {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: AppBottomNav(
+        index: 1,
+        onTap: (i) => pindahTab(context, dari: 1, ke: i),
       ),
     );
   }

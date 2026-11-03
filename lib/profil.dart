@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'app_style.dart';
 import 'bantuan_cs.dart';
-import 'chat_list.dart';
 import 'edit_profil.dart';
 import 'halaman_ulasan.dart';
-import 'informasi_riwayat_booking.dart';
 import 'informasi_saldo_page.dart';
 import 'login.dart';
+import 'navigasi_utama.dart';
 import 'pengaturan_notifikasi.dart';
 import 'profil_model.dart';
 import 'saldo_model.dart' show kRouteSaldo;
@@ -154,23 +153,7 @@ class _ProfilPageState extends State<ProfilPage> {
       ),
       bottomNavigationBar: AppBottomNav(
         index: 4,
-        onTap: (i) {
-          if (i == 4) return; // sedang di Profil
-          if (i == 2) {
-            Navigator.maybePop(context); // kembali ke Beranda
-          } else if (i == 0) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const InformasiRiwayatBookingPage(),
-              ),
-            );
-          } else if (i == 1) {
-            _buka(const HalamanUlasan());
-          } else if (i == 3) {
-            _buka(const ChatListPage());
-          }
-        },
+        onTap: (i) => pindahTab(context, dari: 4, ke: i),
       ),
     );
   }

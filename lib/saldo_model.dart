@@ -101,7 +101,9 @@ class SaldoStore extends ChangeNotifier {
   
   bool paksaGagal = false;
 
-  int saldo = 9600000;
+  int saldo = 7000000; // saldo tersedia
+  int saldoDiproses = 2600000; // menunggu persetujuan admin
+  int get totalDompet => saldo + saldoDiproses;
   int pendapatanBulanIni = 5000000;
   int totalDitarik = 2400000;
   int jumlahPenarikan = 8;

@@ -5,7 +5,7 @@ import 'saldo_widgets.dart';
 import 'pilih_rekening.dart';
 
 class InformasiSaldoPage extends StatefulWidget {
-  /// 0 = Total Pendapatan, 1 = Riwayat Penarikan
+  /// 0 = Total Pendapatan, 1 = Dompet Saya
   final int tabAwal;
   const InformasiSaldoPage({super.key, this.tabAwal = 0});
 
@@ -65,7 +65,7 @@ class _InformasiSaldoPageState extends State<InformasiSaldoPage> {
                       left: 16,
                       right: 16,
                       height: 86,
-                      child: _KartuSaldo(saldo: _store.saldo),
+                      child: _KartuSaldo(saldo: _store.totalDompet),
                     ),
                   ],
                 ),
@@ -82,7 +82,7 @@ class _InformasiSaldoPageState extends State<InformasiSaldoPage> {
                   padding: const EdgeInsets.fromLTRB(14, 16, 14, 20),
                   child: _tab == 0
                       ? _TabPendapatan(store: _store)
-                      : _TabRiwayat(store: _store),
+                      : _TabDompet(store: _store),
                 ),
               ),
             ],
@@ -114,7 +114,7 @@ class _KartuSaldo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Saldo Tersedia',
+          Text('Total Saldo Dompet',
               style: poppins(size: 15, weight: FontWeight.w600, color: kTextDark)),
           FittedBox(
             fit: BoxFit.scaleDown,
@@ -137,7 +137,7 @@ class _TabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const label = ['Total Pendapatan', 'Riwayat Penarikan'];
+    const label = ['Total Pendapatan', 'Dompet Saya'];
     return Container(
       height: 55,
       padding: const EdgeInsets.all(5),
@@ -388,23 +388,76 @@ class _BarisTransaksi extends StatelessWidget {
 }
 
 // ---------------------------------------------------------------------------
-// Tab 2: Riwayat Penarikan
+// Tab 2: Dompet Saya
 // ---------------------------------------------------------------------------
-class _TabRiwayat extends StatelessWidget {
+class _TabDompet extends StatelessWidget {
   final SaldoStore store;
-  const _TabRiwayat({required this.store});
+  const _TabDompet({required this.store});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: kGarisTipis),
+          ),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _SaldoDompet(
+                    judul: 'Tersedia',
+                    nilai: rupiah(store.saldo),
+                    warnaTitik: kTeal,
+                  ),
+                ),
+                const VerticalDivider(
+                    width: 1, thickness: 1, color: kGarisTipis),
+                Expanded(
+                  child: _SaldoDompet(
+                    judul: 'Sedang diproses',
+                    nilai: rupiah(store.saldoDiproses),
+                    warnaTitik: const Color(0xFFFFD52D),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFEF3C7),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.schedule,
+                  size: 30, color: Color(0xFFE8812A)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Penarikan masuk ke dompet dulu dan menunggu persetujuan '
+                  'admin, maksimal 1 x 24 jam sebelum di transfer ke rekening',
+                  style: poppins(size: 11, weight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
         Padding(
-          padding: const EdgeInsets.only(left: 4),
+          padding: const EdgeInsets.only(left: 2),
           child: Text('Riwayat Penarikan',
               style: poppins(size: 16, weight: FontWeight.w700)),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
         if (store.riwayat.isEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
@@ -419,6 +472,51 @@ class _TabRiwayat extends StatelessWidget {
             const SizedBox(height: 12),
           ],
       ],
+    );
+  }
+}
+
+class _SaldoDompet extends StatelessWidget {
+  final String judul;
+  final String nilai;
+  final Color warnaTitik;
+  const _SaldoDompet({
+    required this.judul,
+    required this.nilai,
+    required this.warnaTitik,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 14, 12, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 15,
+                height: 15,
+                decoration:
+                    BoxDecoration(color: warnaTitik, shape: BoxShape.circle),
+              ),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(judul,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: poppins(size: 14, weight: FontWeight.w500)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(nilai, style: poppins(size: 20, weight: FontWeight.w600)),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -438,7 +536,16 @@ class _KartuRiwayat extends StatelessWidget {
       ),
       child: Row(
         children: [
-          BankLogo(bank: penarikan.rekening.bank, size: 34),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: kTealLight,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(Icons.credit_card_outlined,
+                size: 24, color: kTealDark),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

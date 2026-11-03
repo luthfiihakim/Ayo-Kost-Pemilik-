@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'data_penyewa.dart';
 import 'chat_model.dart';
 import 'chat_room.dart';
+import 'halaman_struk.dart'; // <-- Hapus tanda (//) di depan ini
+// import 'halaman_struk.dart'; // Uncomment jika file halaman struk sudah ada
 
 const _teal = Color(0xFF0F9D9D);
 const _tealDark = Color(0xFF156D6D);
@@ -42,6 +44,15 @@ class DetailPenyewaPage extends StatelessWidget {
     );
   }
 
+ void _lihatStruk(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => HalamanStrukPage(penyewa: penyewa),
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,6 +78,33 @@ class DetailPenyewaPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _CatatanCard(catatan: penyewa.catatan),
+                const SizedBox(height: 20),
+                
+                // Tombol Lihat Struk
+                Center(
+                  child: SizedBox(
+                    width: 180,
+                    height: 44,
+                    child: ElevatedButton(
+                      onPressed: () => _lihatStruk(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _teal,
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      child: Text(
+                        'Lihat Struk',
+                        style: _poppins(
+                          size: 15,
+                          weight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

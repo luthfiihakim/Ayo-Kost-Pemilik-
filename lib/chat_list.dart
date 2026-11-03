@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'app_style.dart';
 import 'chat_model.dart';
 import 'chat_room.dart';
+import 'navigasi_utama.dart';
 
 const _abu = Color(0xFFAAAAAA);
 
@@ -58,10 +59,7 @@ class _ChatListPageState extends State<ChatListPage> {
       ),
       bottomNavigationBar: AppBottomNav(
         index: 3,
-        onTap: (i) {
-          if (i == 2) Navigator.maybePop(context); // kembali ke Beranda
-          // TODO: navigasi untuk Booking, Ulasan, Profil
-        },
+        onTap: (i) => pindahTab(context, dari: 3, ke: i),
       ),
     );
   }
